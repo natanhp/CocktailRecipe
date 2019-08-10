@@ -57,4 +57,9 @@ public class CoctailAdapter extends RecyclerView.Adapter<CoctailAdapter.CoctailV
             ButterKnife.bind(this, itemView);
         }
     }
+
+    public void setCocktailModels(List<CocktailModel> cocktailModels) {
+        this.cocktailModels = cocktailModels;
+        notifyDataSetChanged();
+    }
 }
