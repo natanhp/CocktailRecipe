@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CocktailRecipe</string>
+    <string name="picture_of_coctail">Picture of coctail</string>
+    <string name="cocktail_list">Cocktail List</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="how_to">How To</string>
+    <string name="about_me">About me</string>
+    <string name="my_photo">My Photo</string>
+</resources>
