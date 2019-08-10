@@ -21,7 +21,7 @@ public class CocktailViewModel extends AndroidViewModel {
         coctailRepository = new CoctailRepository(application);
     }
 
-    private LiveData<List<CocktailModel>> getDataCoctail(){
+    public LiveData<List<CocktailModel>> getDataCoctail(){
         return coctailRepository.getDataCoctail();
     }
 }
