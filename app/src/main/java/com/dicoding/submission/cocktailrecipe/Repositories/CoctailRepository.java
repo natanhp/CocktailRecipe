@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dicoding.submission.cocktailrecipe.Dao.CocktailDao;
+import com.dicoding.submission.cocktailrecipe.Models.CocktailModel;
 import com.dicoding.submission.cocktailrecipe.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -18,13 +19,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CoctailRepository implements CocktailDao {
-    private MutableLiveData<JSONObject> jsonObjectLiveData = new MutableLiveData<>();
+import lombok.Getter;
+
+public class CoctailRepository {
+    private JSONObject jsonObject = new JSONObject();
+
+    @Getter
+    private MutableLiveData<List<CocktailModel>> dataCoctail = new MutableLiveData<>();
 
     public CoctailRepository(Application application) {
         AsyncTask<Application, Void, JSONObject> jsonAksesAsynTask = new JSONAksesAsynTask();
         jsonAksesAsynTask.execute(application);
+
+        AsyncTask<Void, Void, MutableLiveData<List<CocktailModel>>> jsonObjectParserAsyncTask = new parseJSONObjectAsyncTask();
+        jsonAksesAsynTask.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -58,13 +69,62 @@ public class CoctailRepository implements CocktailDao {
         @Override
         protected void onPostExecute(JSONObject object) {
             super.onPostExecute(object);
-            jsonObjectLiveData.setValue(object);
+            jsonObject = object;
         }
 
     }
 
-    @Override
-    public LiveData<JSONObject> creatJSONOBject() {
-        return jsonObjectLiveData;
+    @SuppressLint("StaticFieldLeak")
+    private class parseJSONObjectAsyncTask extends AsyncTask<Void, Void, MutableLiveData<List<CocktailModel>>> {
+
+        @Override
+        protected MutableLiveData<List<CocktailModel>> doInBackground(Void... voids) {
+            CocktailDao cocktailDao = () -> jsonObject;
+
+            MutableLiveData<List<CocktailModel>> cocktailData = new MutableLiveData<>();
+            List<CocktailModel> cocktailModels = new ArrayList<>();
+            try {
+                JSONArray jsonArray = cocktailDao.creatJSONOBject().getJSONArray("drinks");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject;
+                    jsonObject = jsonArray.getJSONObject(i);
+
+                    CocktailModel cocktailModel = new CocktailModel();
+                    cocktailModel.setName(jsonObject.getString("name"));
+                    cocktailModel.setUriImage(jsonObject.getString("UriImage"));
+
+                    JSONArray ingedients;
+                    ingedients = jsonObject.getJSONArray("ingredient");
+
+                    List<String> stringList = new ArrayList<>();
+                    for (int j = 0; j < ingedients.length(); j++) {
+                        stringList.add(ingedients.getString(j));
+                    }
+                    cocktailModel.setIngredients(stringList);
+
+                    JSONArray howToMake;
+                    howToMake = jsonObject.getJSONArray("howToMake");
+                    stringList = new ArrayList<>();
+                    for (int j = 0; j < howToMake.length(); j++) {
+                        stringList.add(howToMake.getString(j));
+                    }
+                    cocktailModel.setHowToMake(stringList);
+
+                    cocktailModels.add(cocktailModel);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            cocktailData.postValue(cocktailModels);
+
+            return cocktailData;
+        }
+
+        @Override
+        protected void onPostExecute(MutableLiveData<List<CocktailModel>> listMutableLiveData) {
+            super.onPostExecute(listMutableLiveData);
+            dataCoctail = listMutableLiveData;
+        }
     }
 }
