@@ -9,5 +9,5 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public interface CocktailDao {
-    LiveData<JSONObject> creatJSONOBject(Application application);
+    LiveData<JSONObject> creatJSONOBject();
 }

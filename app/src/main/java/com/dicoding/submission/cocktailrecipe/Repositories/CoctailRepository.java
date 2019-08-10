@@ -64,7 +64,7 @@ public class CoctailRepository implements CocktailDao {
     }
 
     @Override
-    public LiveData<JSONObject> creatJSONOBject(Application application) {
+    public LiveData<JSONObject> creatJSONOBject() {
         return jsonObjectLiveData;
     }
 }
