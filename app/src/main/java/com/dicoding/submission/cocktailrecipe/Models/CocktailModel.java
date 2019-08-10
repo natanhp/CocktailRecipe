@@ -8,6 +8,6 @@ import lombok.Data;
 public class CocktailModel {
     private String name;
     private String UriImage;
-    private List<String> ingridients;
+    private List<String> ingredients;
     private List<String> howToMake;
 }
