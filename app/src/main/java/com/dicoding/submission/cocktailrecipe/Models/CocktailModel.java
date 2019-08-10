@@ -14,6 +14,9 @@ public class CocktailModel implements Parcelable {
     private List<String> ingredients;
     private List<String> howToMake;
 
+    public CocktailModel() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -27,7 +30,7 @@ public class CocktailModel implements Parcelable {
         dest.writeStringList(this.howToMake);
     }
 
-    protected CocktailModel(Parcel in) {
+    private CocktailModel(Parcel in) {
         this.name = in.readString();
         this.UriImage = in.readString();
         this.ingredients = in.createStringArrayList();
