@@ -65,6 +65,9 @@ public class CoctailAdapter extends RecyclerView.Adapter<CoctailAdapter.CoctailV
         CoctailViewHolder(@NonNull View itemView, OnEventClickListener onEventClickListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            this.onEventClickListener = onEventClickListener;
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
