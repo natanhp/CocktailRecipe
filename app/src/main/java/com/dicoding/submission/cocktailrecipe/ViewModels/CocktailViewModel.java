@@ -6,9 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.dicoding.submission.cocktailrecipe.Models.CocktailModel;
 import com.dicoding.submission.cocktailrecipe.Repositories.CoctailRepository;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class CocktailViewModel extends AndroidViewModel {
     private CoctailRepository coctailRepository;
@@ -18,7 +21,7 @@ public class CocktailViewModel extends AndroidViewModel {
         coctailRepository = new CoctailRepository(application);
     }
 
-    public LiveData<JSONObject> getJSONObject(){
-        return coctailRepository.creatJSONOBject();
+    private LiveData<List<CocktailModel>> getDataCoctail(){
+        return coctailRepository.getDataCoctail();
     }
 }
