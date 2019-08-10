@@ -21,21 +21,34 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import lombok.Getter;
 
 public class CoctailRepository {
     private JSONObject jsonObject = new JSONObject();
 
-    @Getter
+//    @Getter
     private MutableLiveData<List<CocktailModel>> dataCoctail = new MutableLiveData<>();
 
     public CoctailRepository(Application application) {
         AsyncTask<Application, Void, JSONObject> jsonAksesAsynTask = new JSONAksesAsynTask();
-        jsonAksesAsynTask.execute(application);
+        try {
+            jsonObject = jsonAksesAsynTask.execute(application).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         AsyncTask<Void, Void, MutableLiveData<List<CocktailModel>>> jsonObjectParserAsyncTask = new parseJSONObjectAsyncTask();
-        jsonAksesAsynTask.execute();
+        try {
+            dataCoctail=jsonObjectParserAsyncTask.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -126,5 +139,9 @@ public class CoctailRepository {
             super.onPostExecute(listMutableLiveData);
             dataCoctail = listMutableLiveData;
         }
+    }
+
+    public MutableLiveData<List<CocktailModel>> getDataCoctail() {
+        return dataCoctail;
     }
 }
