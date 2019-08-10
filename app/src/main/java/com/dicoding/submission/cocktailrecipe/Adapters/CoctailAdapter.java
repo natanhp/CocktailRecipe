@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dicoding.submission.cocktailrecipe.Models.CocktailModel;
 import com.dicoding.submission.cocktailrecipe.R;
 
@@ -37,6 +38,7 @@ public class CoctailAdapter extends RecyclerView.Adapter<CoctailAdapter.CoctailV
         holder.textViewCocktail.setText(cocktailModel.getName());
         Glide.with(holder.itemView.getContext())
                 .load(cocktailModel.getUriImage())
+                .apply(new RequestOptions().override(400, 400))
                 .into(holder.imageViewCocktail);
     }
 
