@@ -9,8 +9,6 @@ import androidx.lifecycle.LiveData;
 import com.dicoding.submission.cocktailrecipe.Models.CocktailModel;
 import com.dicoding.submission.cocktailrecipe.Repositories.CoctailRepository;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class CocktailViewModel extends AndroidViewModel {
