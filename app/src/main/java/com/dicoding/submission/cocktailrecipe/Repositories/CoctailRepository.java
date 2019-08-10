@@ -28,7 +28,7 @@ import lombok.Getter;
 public class CoctailRepository {
     private JSONObject jsonObject = new JSONObject();
 
-//    @Getter
+    @Getter
     private MutableLiveData<List<CocktailModel>> dataCoctail = new MutableLiveData<>();
 
     public CoctailRepository(Application application) {
@@ -43,7 +43,7 @@ public class CoctailRepository {
 
         AsyncTask<Void, Void, MutableLiveData<List<CocktailModel>>> jsonObjectParserAsyncTask = new parseJSONObjectAsyncTask();
         try {
-            dataCoctail=jsonObjectParserAsyncTask.execute().get();
+            dataCoctail = jsonObjectParserAsyncTask.execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -139,9 +139,5 @@ public class CoctailRepository {
             super.onPostExecute(listMutableLiveData);
             dataCoctail = listMutableLiveData;
         }
-    }
-
-    public MutableLiveData<List<CocktailModel>> getDataCoctail() {
-        return dataCoctail;
     }
 }
