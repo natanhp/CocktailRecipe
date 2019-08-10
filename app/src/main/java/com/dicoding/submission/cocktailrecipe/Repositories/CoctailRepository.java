@@ -20,14 +20,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class CoctailRepository implements CocktailDao {
-    private MutableLiveData<JSONObject> jsonObjectLiveData;
+    private MutableLiveData<JSONObject> jsonObjectLiveData = new MutableLiveData<>();
+
+    public CoctailRepository(Application application) {
+        AsyncTask<Application, Void, JSONObject> jsonAksesAsynTask = new JSONAksesAsynTask();
+        jsonAksesAsynTask.execute(application);
+    }
 
     @SuppressLint("StaticFieldLeak")
     private class JSONAksesAsynTask extends AsyncTask<Application, Void, JSONObject> {
 
         @Override
         protected JSONObject doInBackground(Application... applications) {
-            JSONObject jsonObject = null;
+            JSONObject jsonObject = new JSONObject();
 
             InputStream inputStream = applications[0].getApplicationContext().getResources().openRawResource(R.raw.Cocktails);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
