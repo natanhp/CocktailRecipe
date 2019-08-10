@@ -34,7 +34,7 @@ public class CoctailRepository implements CocktailDao {
         protected JSONObject doInBackground(Application... applications) {
             JSONObject jsonObject = new JSONObject();
 
-            InputStream inputStream = applications[0].getApplicationContext().getResources().openRawResource(R.raw.Cocktails);
+            InputStream inputStream = applications[0].getApplicationContext().getResources().openRawResource(R.raw.cocktails);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder stringBuilder = new StringBuilder();
             try {
