@@ -23,12 +23,18 @@ import butterknife.ButterKnife;
 public class CoctailAdapter extends RecyclerView.Adapter<CoctailAdapter.CoctailViewHolder> {
 
     private List<CocktailModel> cocktailModels = new ArrayList<>();
+    private OnEventClickListener onEventClickListener;
+
+    public CoctailAdapter(OnEventClickListener onEventClickListener) {
+        this.onEventClickListener = onEventClickListener;
+    }
+
     @NonNull
     @Override
     public CoctailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.coctail_item, parent, false);
 
-        return new CoctailViewHolder(view);
+        return new CoctailViewHolder(view, onEventClickListener);
     }
 
     @Override
@@ -47,21 +53,32 @@ public class CoctailAdapter extends RecyclerView.Adapter<CoctailAdapter.CoctailV
         return cocktailModels.size();
     }
 
-    class CoctailViewHolder extends RecyclerView.ViewHolder {
+    class CoctailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.imageView_coctail)
         ImageView imageViewCocktail;
 
         @BindView(R.id.textView_coctail)
         TextView textViewCocktail;
 
-        CoctailViewHolder(@NonNull View itemView) {
+        OnEventClickListener onEventClickListener;
+
+        CoctailViewHolder(@NonNull View itemView, OnEventClickListener onEventClickListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onEventClickListener.onEventClick(getAdapterPosition());
         }
     }
 
     public void setCocktailModels(List<CocktailModel> cocktailModels) {
         this.cocktailModels = cocktailModels;
         notifyDataSetChanged();
+    }
+
+    public interface OnEventClickListener{
+        void onEventClick(int position);
     }
 }
