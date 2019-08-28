@@ -25,11 +25,11 @@ public class CocktailViewModel extends AndroidViewModel {
         state = coctailRepository.getState();
     }
 
-    public LiveData<List<CocktailModel>> getDataCoctail(){
+    public LiveData<List<CocktailModel>> getDataCoctail() {
         return coctailRepository.getDataCoctail();
     }
 
-    public void runThread(){
+    public void runThread() {
         coctailRepository.runThread();
     }
 }
