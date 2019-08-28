@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import lombok.Getter;
 
@@ -32,12 +31,12 @@ public class CoctailRepository {
     private MutableLiveData<List<CocktailModel>> dataCoctail = new MutableLiveData<>();
 
     @Getter
-    private Boolean state=false;
+    private Boolean state = false;
 
     private Application application;
 
     public CoctailRepository(Application application) {
-       this.application = application;
+        this.application = application;
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -46,7 +45,7 @@ public class CoctailRepository {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            state=true;
+            state = true;
         }
 
         @Override
@@ -90,7 +89,7 @@ public class CoctailRepository {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            state=true;
+            state = true;
         }
 
         @Override
@@ -142,12 +141,12 @@ public class CoctailRepository {
         protected void onPostExecute(MutableLiveData<List<CocktailModel>> listMutableLiveData) {
             super.onPostExecute(listMutableLiveData);
             dataCoctail.postValue(listMutableLiveData.getValue());
-            state=false;
+            state = false;
             System.out.println("TEST LEK" + dataCoctail);
         }
     }
 
-    public void runThread(){
+    public void runThread() {
         new JSONAksesAsynTask().execute(application);
     }
 }
