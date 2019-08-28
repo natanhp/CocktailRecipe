@@ -31,31 +31,27 @@ public class CoctailRepository {
     @Getter
     private MutableLiveData<List<CocktailModel>> dataCoctail = new MutableLiveData<>();
 
-    public CoctailRepository(Application application) {
-        AsyncTask<Application, Void, JSONObject> jsonAksesAsynTask = new JSONAksesAsynTask();
-        try {
-            jsonObject = jsonAksesAsynTask.execute(application).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Getter
+    private Boolean state=false;
 
-        AsyncTask<Void, Void, MutableLiveData<List<CocktailModel>>> jsonObjectParserAsyncTask = new parseJSONObjectAsyncTask();
-        try {
-            dataCoctail = jsonObjectParserAsyncTask.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private Application application;
+
+    public CoctailRepository(Application application) {
+       this.application = application;
     }
 
     @SuppressLint("StaticFieldLeak")
     private class JSONAksesAsynTask extends AsyncTask<Application, Void, JSONObject> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            state=true;
+        }
+
+        @Override
         protected JSONObject doInBackground(Application... applications) {
+            System.out.println("TEST LEK");
             JSONObject jsonObject = new JSONObject();
 
             InputStream inputStream = applications[0].getApplicationContext().getResources().openRawResource(R.raw.cocktails);
@@ -70,9 +66,7 @@ public class CoctailRepository {
                 JSONTokener jsonTokener = new JSONTokener(resultString);
 
                 jsonObject = new JSONObject(jsonTokener);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
 
@@ -82,7 +76,10 @@ public class CoctailRepository {
         @Override
         protected void onPostExecute(JSONObject object) {
             super.onPostExecute(object);
+            System.out.println("TEST LEK2");
             jsonObject = object;
+            System.out.println(jsonObject);
+            new parseJSONObjectAsyncTask().execute();
         }
 
     }
@@ -91,8 +88,15 @@ public class CoctailRepository {
     private class parseJSONObjectAsyncTask extends AsyncTask<Void, Void, MutableLiveData<List<CocktailModel>>> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            state=true;
+        }
+
+        @Override
         protected MutableLiveData<List<CocktailModel>> doInBackground(Void... voids) {
             CocktailDao cocktailDao = () -> jsonObject;
+            System.out.println("TEST LEK3");
 
             MutableLiveData<List<CocktailModel>> cocktailData = new MutableLiveData<>();
             List<CocktailModel> cocktailModels = new ArrayList<>();
@@ -137,7 +141,13 @@ public class CoctailRepository {
         @Override
         protected void onPostExecute(MutableLiveData<List<CocktailModel>> listMutableLiveData) {
             super.onPostExecute(listMutableLiveData);
-            dataCoctail = listMutableLiveData;
+            dataCoctail.postValue(listMutableLiveData.getValue());
+            state=false;
+            System.out.println("TEST LEK" + dataCoctail);
         }
+    }
+
+    public void runThread(){
+        new JSONAksesAsynTask().execute(application);
     }
 }
